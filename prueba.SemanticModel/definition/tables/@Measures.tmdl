@@ -1,0 +1,277 @@
+table @Measures
+	lineageTag: 6b496767-6063-4a86-9379-a30e9fea642c
+
+	measure 'Duracion Total' = ```
+			
+			SUM(Games[Duración])
+			
+			```
+		lineageTag: 942b9507-60f5-4b6f-b5cc-6758dbcc1663
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Juego' =
+			
+			TOPN(1, ALL(Games[Game]), [Total Horas Num])
+		displayFolder: Top
+		lineageTag: b6bcc28c-7db4-40b4-828c-3b4ba0f6ccba
+
+	measure 'Total Horas y Minutos New' = ```
+			
+			VAR _Duracion =
+			    SUMX(
+			        Games,
+			        VAR _Start = Games[Start Hour]
+			        VAR _Finish = Games[Finish Hour]
+			        RETURN 
+			            IF(_Finish < _Start, _Finish + 1 - _Start, _Finish - _Start)
+			    )
+			VAR TotalHoras = INT(_Duracion * 24)
+			VAR TotalMinutos = INT((_Duracion * 24 - TotalHoras) * 60)
+			RETURN
+			IF(
+			    _Duracion = 0,
+			    BLANK(),
+			    TotalHoras & "h " & FORMAT(TotalMinutos, "00") & "m"
+			)
+			```
+		lineageTag: dd971678-4d7b-435f-8642-97873b306092
+
+	measure 'Total Horas Num' = ```
+			
+			VAR _Duracion =
+			    SUMX(
+			        Games,
+			        VAR _Start = Games[Start Hour]
+			        VAR _Finish = Games[Finish Hour]
+			        RETURN
+			            IF(_Finish < _Start, _Finish + 1 - _Start, _Finish - _Start)
+			    )
+			RETURN
+			_Duracion * 24
+			
+			```
+		lineageTag: 99b732fe-9cf6-4676-b62e-5cf182e17af4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ranking Juegos por Duracion' = ```
+			
+			RANKX(
+			    ALL(Games[Game]),
+			    [Total Horas Num],
+			    ,
+			    DESC
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 2b054a10-a5ca-4cac-969b-a21a4f122cd3
+
+	measure 'Top 2 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 2)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: f2e10095-61f1-48a3-b078-5003b976eac3
+
+	measure 'Top 3 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 3)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: a62a1566-19f8-428d-8b83-ea9c7f98ea2f
+
+	measure 'Top 4 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 4)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: 451b84a7-fe92-41fb-a6ec-da107d7bfb59
+
+	measure 'Top 5 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 5)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: 6aca160f-3839-4cd7-822f-d4ab2a9a1703
+
+	measure 'Top 6 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 6)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: 66d91135-1397-4d76-8bda-e80ae3f574e6
+
+	measure 'Top 7 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 7)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: 045cafa1-a731-4274-b626-dabe06319b31
+
+	measure 'Top 8 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 8)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: 7b5c2d7d-4912-418c-a597-f0c2bd3916e2
+
+	measure 'Top 9 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 9)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: 1accebb4-5bbc-4f44-82a9-4277ca89f451
+
+	measure 'Top 10 Juego' = ```
+			
+			VAR TablaRanking =
+			    ADDCOLUMNS(
+			        ALL(Games[Game]),
+			        "Rk", [Ranking Juegos por Duracion]
+			    )
+			RETURN
+			CALCULATE(
+			    SELECTEDVALUE(Games[Game]),
+			    FILTER(TablaRanking, [Rk] = 10)
+			)
+			
+			```
+		displayFolder: Top
+		lineageTag: 7b020234-5af2-48bb-9f46-9286cbe0c60f
+
+	measure Imagen =
+			
+			CALCULATE(SELECTEDVALUE(Games[Imagen]), FILTER(Games, Games[Game] = [Top 2 Juego]))
+		lineageTag: 1fe46f68-f66a-4410-a0e0-fb57d43d6674
+		dataCategory: ImageUrl
+
+	measure YTD =
+			
+			CALCULATE(
+			    [Total Horas Num],
+			    DATESYTD(Calendario[Date], "31/12")
+			)
+		lineageTag: 3e45776d-9ae6-429e-8012-1122dcabf572
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Sesions = COUNTROWS(Games)
+		formatString: 0
+		lineageTag: ea0e2e69-92e3-49b2-92bd-8a8e69745308
+
+	measure 'Hour AV' = ```
+			
+			VAR _Duracion =
+			    AVERAGEX(
+			        Games,
+			        VAR _Start = Games[Start Hour]
+			        VAR _Finish = Games[Finish Hour]
+			        RETURN 
+			            IF(_Finish < _Start, _Finish + 1 - _Start, _Finish - _Start)
+			    )
+			VAR TotalHoras = INT(_Duracion * 24)
+			VAR TotalMinutos = INT((_Duracion * 24 - TotalHoras) * 60)
+			RETURN
+			TotalHoras & "h " & FORMAT(TotalMinutos, "00") & "m"
+			```
+		lineageTag: 1b41fc45-ab25-48af-b339-8472b15fe64b
+
+	column Column
+		formatString: 0
+		lineageTag: 29ea13db-851a-4325-a6b3-e534d1dd26c7
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition @Measures = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 2e9c2812edef4d1789fdf18365fabea2
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

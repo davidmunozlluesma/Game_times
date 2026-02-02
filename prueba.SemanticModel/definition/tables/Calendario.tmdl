@@ -1,0 +1,131 @@
+table Calendario
+	lineageTag: 817aee91-6aad-4e68-83e8-6d2187b62d1e
+
+	column Date
+		formatString: General Date
+		lineageTag: 535b422c-d47c-4ea9-b334-25cb8f2e2194
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: f9e080eb-1cf0-4689-b55c-e83c12d8e3e8
+			defaultHierarchy: LocalDateTable_32b815e1-80f4-4e2d-b502-5d6613db6688.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes
+		lineageTag: 5450caa1-e377-440a-bd73-1349735ae4b5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Mes]
+		sortByColumn: 'Mes Numero'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mes Numero'
+		formatString: 0
+		lineageTag: 11e8c33c-805d-4409-8cf8-bc3a3dd3d563
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Mes Numero]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Día
+		lineageTag: 808f6eb8-342e-44a0-a1d9-43a5a56a90ae
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Día]
+		sortByColumn: 'Día Semana Numero'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Día Numero'
+		formatString: 0
+		lineageTag: 95bc9c82-8ece-43d9-b79e-2251d0c4d346
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Día Numero]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Año
+		formatString: 0
+		lineageTag: 172c1b89-bc9e-4bef-bf54-372baa7c6067
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Año]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Trimestre
+		lineageTag: 3ddc5b45-90c9-4c40-8944-69b7a2394b56
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Trimestre]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trimestre Numero'
+		formatString: 0
+		lineageTag: 157d76b7-01d1-43bf-ab91-b2e6006cad52
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Trimestre Numero]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Semana Numero'
+		formatString: 0
+		lineageTag: 34ea241e-8e94-43a5-8b8f-caad7dd1ef16
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Semana Numero]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Es Finde Semana'
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9b6a85cf-0363-4c68-b58b-15486842b66f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Es Finde Semana]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Día Semana Numero'
+		formatString: 0
+		lineageTag: 68e8f88b-9bb7-42ca-b79a-fba4d5a4991d
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Día Semana Numero]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendario = calculated
+		mode: import
+		source = ```
+				
+				VAR FechaInicio = DATE(2024,1,1)
+				VAR FechaFin    = DATE(2030,12,31)
+				RETURN
+				ADDCOLUMNS(
+				    CALENDAR(FechaInicio, FechaFin),
+				    "Mes", FORMAT([Date],"MMMM"),
+				    "Mes Numero", MONTH([Date]),
+				    "Día", FORMAT([Date],"dddd"),
+				    "Día Semana Numero", WEEKDAY([Date], 2),
+				    "Día Numero", DAY([Date]),
+				    "Año", YEAR([Date]),
+				    "Trimestre", "Q" & FORMAT([Date],"Q"),
+				    "Trimestre Numero", QUARTER([Date]),
+				    "Semana Numero", WEEKNUM([Date],2),
+				    "Es Finde Semana", IF(WEEKDAY([Date],2) > 5, TRUE(), FALSE())
+				)
+				
+				```
+
+	annotation PBI_Id = 3b0c318420b74ab9a4dd076e70f3f7f1
+

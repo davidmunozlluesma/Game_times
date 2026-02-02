@@ -1,0 +1,73 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 15,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 241,
+            "y": 148.5
+          },
+          "nodeIndex": "Calendario",
+          "nodeLineageTag": "817aee91-6aad-4e68-83e8-6d2187b62d1e",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 632,
+            "y": 58.5
+          },
+          "nodeIndex": "Games",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 986,
+            "y": 84.5
+          },
+          "nodeIndex": "Images",
+          "nodeLineageTag": "be807ceb-8038-4243-bf7c-bef53f87c230",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1023,
+            "y": 472.5
+          },
+          "nodeIndex": "@Measures",
+          "nodeLineageTag": "6b496767-6063-4a86-9379-a30e9fea642c",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

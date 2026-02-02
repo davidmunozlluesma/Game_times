@@ -1,0 +1,173 @@
+table Games
+	lineageTag: 0b398ff7-b2c7-463e-9298-732ac38ef21c
+
+	column Imagen
+		dataType: string
+		lineageTag: 4b2d71c1-febc-40b7-a836-4a5ca97fd196
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: Imagen
+
+		annotation SummarizationSetBy = Automatic
+
+	column Duración
+		dataType: double
+		lineageTag: 995e70f4-f537-4c87-b1d5-ac9934355bfd
+		summarizeBy: sum
+		sourceColumn: Duración
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Game
+		dataType: string
+		lineageTag: 6de0c60b-820d-48cc-b97a-b77f7759c7ca
+		summarizeBy: none
+		sourceColumn: Game
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ee94df44-0c6a-4d02-a13a-25687350e871
+		summarizeBy: none
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Start Hour'
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 10a235ee-dd1d-4204-9501-49ae6d10ee46
+		summarizeBy: none
+		sourceColumn: Start Hour
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column 'Finish Hour'
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: bb37ffb6-f087-4ed9-8f99-3b2cb923545a
+		summarizeBy: none
+		sourceColumn: Finish Hour
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column Developer
+		dataType: string
+		lineageTag: 1bc44b92-611a-4ef5-9b4d-0a4b8f9b6b79
+		summarizeBy: none
+		sourceColumn: Developer
+
+		annotation SummarizationSetBy = Automatic
+
+	column Publisher
+		dataType: string
+		lineageTag: 5dc75f4c-46a7-4a23-8f92-3a0e0bdf7b95
+		summarizeBy: none
+		sourceColumn: Publisher
+
+		annotation SummarizationSetBy = Automatic
+
+	column Platform
+		dataType: string
+		lineageTag: f2b5c7d3-0b2b-44f6-8095-5583faf31c7a
+		summarizeBy: none
+		sourceColumn: Platform
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Genre 1'
+		dataType: string
+		lineageTag: 38fd58ef-049a-41d8-9cda-1e6ae30902b1
+		summarizeBy: none
+		sourceColumn: Genre 1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Genre 2'
+		dataType: string
+		lineageTag: fba745fc-43b6-49cc-8ef6-93b63a3db4e6
+		summarizeBy: none
+		sourceColumn: Genre 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time Slot' =
+			
+			SWITCH (
+			    TRUE(),
+			    HOUR ( Games[Start Hour] ) >= 6
+			        && HOUR ( Games[Start Hour] ) < 12, "Morning (06-11)",
+			    HOUR ( Games[Start Hour] ) >= 12
+			        && HOUR ( Games[Start Hour] ) < 18, "Afternoon (12-17)",
+			    HOUR ( Games[Start Hour] ) >= 18
+			        && HOUR ( Games[Start Hour] ) < 24, "Night (18-23)",
+			    "Early morning (00-05)"
+			)
+		lineageTag: 2614728c-5425-41c1-8822-53c3a4a1a42e
+		summarizeBy: none
+		sortByColumn: 'Time Slot Order'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time Slot Order' =
+			
+			SWITCH (
+			    TRUE(),
+			    HOUR ( Games[Start Hour] ) >= 6
+			        && HOUR ( Games[Start Hour] ) < 12, "2",
+			    HOUR ( Games[Start Hour] ) >= 12
+			        && HOUR ( Games[Start Hour] ) < 18, "3",
+			    HOUR ( Games[Start Hour] ) >= 18
+			        && HOUR ( Games[Start Hour] ) < 24, "4",
+			    "1"
+			)
+		lineageTag: aa118dad-38db-4d14-8cd9-a7d7a7c6789e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hora del Día' = ```
+			
+			HOUR ( Games[Start Hour] )
+			
+			```
+		formatString: 0
+		lineageTag: 3d792519-1fe2-4b52-8fd5-6b61ad869352
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Games = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\DAVIMUNO\Music\Tiempo_Juegos.xlsx"), null, false),
+				    Hoja1_sheet = Source{[Item="Hoja1",Kind="Sheet"]}[Data],
+				    FilterNullAndWhitespace = each List.Select(_, each _ <> null and (not (_ is text) or Text.Trim(_) <> "")),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(Hoja1_sheet, each try List.IsEmpty(List.Skip(FilterNullAndWhitespace(Record.FieldValues(_)), 1)) otherwise false),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Removed Bottom Rows", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Game", type text}, {"Day", type date}, {"Start Hour", type datetime}, {"Finish Hour", type datetime}, {"Developer", type text}, {"Publisher", type text}, {"Platform", type text}, {"Genre 1", type text}, {"Genre 2", type text}, {"Imagen", type text}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"Start Hour", type time}, {"Finish Hour", type time}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type1", "Custom", each [Finish Hour] - [Start Hour]),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Added Custom",{{"Custom", type duration}}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Changed Type2",{"Game", "Day", "Start Hour", "Finish Hour", "Custom", "Developer", "Publisher", "Platform", "Genre 1", "Genre 2", "Imagen"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns",{{"Custom", "Duración"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

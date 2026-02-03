@@ -10,13 +10,13 @@ table @Measures
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Top 1 Juego' =
+	measure 'Top 1 Jugo' =
 			
 			TOPN(1, ALL(Games[Game]), [Total Horas Num])
 		displayFolder: Top
 		lineageTag: b6bcc28c-7db4-40b4-828c-3b4ba0f6ccba
 
-	measure 'Total Horas y Minutos New' = ```
+	measure 'Total Hours Text' = ```
 			
 			VAR _Duracion =
 			    SUMX(
@@ -37,7 +37,7 @@ table @Measures
 			```
 		lineageTag: dd971678-4d7b-435f-8642-97873b306092
 
-	measure 'Total Horas Num' = ```
+	measure 'Total Hours Num' = ```
 			
 			VAR _Duracion =
 			    SUMX(
@@ -221,12 +221,6 @@ table @Measures
 		displayFolder: Top
 		lineageTag: 7b020234-5af2-48bb-9f46-9286cbe0c60f
 
-	measure Imagen =
-			
-			CALCULATE(SELECTEDVALUE(Games[Imagen]), FILTER(Games, Games[Game] = [Top 2 Juego]))
-		lineageTag: 1fe46f68-f66a-4410-a0e0-fb57d43d6674
-		dataCategory: ImageUrl
-
 	measure YTD =
 			
 			CALCULATE(
@@ -241,7 +235,7 @@ table @Measures
 		formatString: 0
 		lineageTag: ea0e2e69-92e3-49b2-92bd-8a8e69745308
 
-	measure 'Hour AV' = ```
+	measure 'Hour Average' = ```
 			
 			VAR _Duracion =
 			    AVERAGEX(

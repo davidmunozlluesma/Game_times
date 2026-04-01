@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "f9d3ccc19e90e0a8b73a",
+  "position": {
+    "x": 16.784457407318129,
+    "y": 464.04088126114829,
+    "z": 500,
+    "height": 301.1329123077665,
+    "width": 1885.78315576339,
+    "tabOrder": 8001
+  },
+  "visualGroup": {
+    "displayName": "Hours Month",
+    "groupMode": "ScaleMode"
+  }
+}

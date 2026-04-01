@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "a060934acc6b71d664ea",
+  "position": {
+    "x": 17.682271680736761,
+    "y": 144.4052187260169,
+    "z": 1000,
+    "height": 583.51496546431315,
+    "width": 923.89869531849581,
+    "tabOrder": 5013
+  },
+  "visualGroup": {
+    "displayName": "Hours Day",
+    "groupMode": "ScaleMode"
+  }
+}

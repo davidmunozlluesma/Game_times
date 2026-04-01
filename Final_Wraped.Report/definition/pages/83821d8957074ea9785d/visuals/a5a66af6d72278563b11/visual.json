@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "a5a66af6d72278563b11",
+  "position": {
+    "x": 16.784457407318129,
+    "y": 144.14886949814394,
+    "z": 1000,
+    "height": 301.13291230776645,
+    "width": 1884.79583473943,
+    "tabOrder": 8001
+  },
+  "visualGroup": {
+    "displayName": "Hors Game",
+    "groupMode": "ScaleMode"
+  }
+}

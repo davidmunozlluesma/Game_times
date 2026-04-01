@@ -1,0 +1,261 @@
+table @Measures
+	lineageTag: 6b496767-6063-4a86-9379-a30e9fea642c
+
+	measure 'Duracion Total' =
+			// Sums the 'Duración' column from the Games table to get the total duration.
+			SUM(Games[Duración])
+		lineageTag: 942b9507-60f5-4b6f-b5cc-6758dbcc1663
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top 1 Game' = ```
+			 		// Returns the game with the highest value in [Total Horas Num].
+			 		// ALL removes any filter on the games.
+			 		TOPN(1, ALL(Games[Game]), [Total Horas Num])
+			```
+		displayFolder: Top
+		lineageTag: b6bcc28c-7db4-40b4-828c-3b4ba0f6ccba
+
+	measure 'Total Horas y Minutos New' = ```
+			// Calculates the total duration by summing the difference between start and finish hour for each row.
+			VAR _Duration =
+				SUMX(
+					Games,
+					// Gets the start and finish hour for each game
+					VAR _Start = Games[Start Hour]
+					VAR _Finish = Games[Finish Hour]
+					// If the finish hour is less than the start hour, adds 1 (crosses midnight)
+					RETURN 
+						IF(_Finish < _Start, _Finish + 1 - _Start, _Finish - _Start)
+				)
+			// Converts the total duration (in days) to hours and minutes
+			VAR TotalHours = INT(_Duration * 24)
+			VAR TotalMinutes = INT((_Duration * 24 - TotalHours) * 60)
+			RETURN
+			// If the duration is 0, returns BLANK, otherwise returns the text with hours and minutes
+			IF(
+				_Duration = 0,
+				BLANK(),
+				TotalHours & "h " & FORMAT(TotalMinutes, "00") & "m"
+			)
+			```
+		lineageTag: dd971678-4d7b-435f-8642-97873b306092
+
+	measure 'Total Horas Num' =
+			// Calculates the sum of the difference between start and finish hour for each game.
+			VAR _Duration =
+				SUMX(
+					Games,
+					// Gets the start and finish hour for each game
+					VAR _Start = Games[Start Hour]
+					VAR _Finish = Games[Finish Hour]
+					// If the finish hour is less than the start hour, adds 1 (crosses midnight)
+					RETURN
+						IF(_Finish < _Start, _Finish + 1 - _Start, _Finish - _Start)
+				)
+			// Converts the total duration (in days) to hours
+			RETURN
+			_Duration * 24
+		lineageTag: 99b732fe-9cf6-4676-b62e-5cf182e17af4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ranking Games by Duration' =
+			// Assigns a ranking to each game according to the total hours played, from highest to lowest.
+			RANKX(
+				ALL(Games[Game]),
+				[Total Horas Num],
+				,
+				DESC
+			)
+		formatString: 0
+		lineageTag: 2b054a10-a5ca-4cac-969b-a21a4f122cd3
+
+	measure 'Top 2 Game' =
+			// Returns the name of the game that is in position 2 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 2)
+			)
+		displayFolder: Top
+		lineageTag: f2e10095-61f1-48a3-b078-5003b976eac3
+
+	measure 'Top 3 Game' =
+			// Returns the name of the game that is in position 3 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 3)
+			)
+		displayFolder: Top
+		lineageTag: a62a1566-19f8-428d-8b83-ea9c7f98ea2f
+
+	measure 'Top 4 Game' =
+			// Returns the name of the game that is in position 4 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 4)
+			)
+		displayFolder: Top
+		lineageTag: 451b84a7-fe92-41fb-a6ec-da107d7bfb59
+
+	measure 'Top 5 Game' =
+			// Returns the name of the game that is in position 5 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 5)
+			)
+		displayFolder: Top
+		lineageTag: 6aca160f-3839-4cd7-822f-d4ab2a9a1703
+
+	measure 'Top 6 Game' =
+			// Returns the name of the game that is in position 6 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 6)
+			)
+		displayFolder: Top
+		lineageTag: 66d91135-1397-4d76-8bda-e80ae3f574e6
+
+	measure 'Top 7 Game' =
+			// Returns the name of the game that is in position 7 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 7)
+			)
+		displayFolder: Top
+		lineageTag: 045cafa1-a731-4274-b626-dabe06319b31
+
+	measure 'Top 8 Game' =
+			// Returns the name of the game that is in position 8 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 8)
+			)
+		displayFolder: Top
+		lineageTag: 7b5c2d7d-4912-418c-a597-f0c2bd3916e2
+
+	measure 'Top 9 Game' =
+			// Returns the name of the game that is in position 9 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 9)
+			)
+		displayFolder: Top
+		lineageTag: 1accebb4-5bbc-4f44-82a9-4277ca89f451
+
+	measure 'Top 10 Game' =
+			// Returns the name of the game that is in position 10 of the ranking by duration.
+			VAR RankingTable =
+				ADDCOLUMNS(
+					ALL(Games[Game]),
+					"Rk", [Ranking Games by Duration]
+				)
+			RETURN
+			CALCULATE(
+				SELECTEDVALUE(Games[Game]),
+				FILTER(RankingTable, [Rk] = 10)
+			)
+		displayFolder: Top
+		lineageTag: 7b020234-5af2-48bb-9f46-9286cbe0c60f
+
+	measure YTD =
+			// Calculates the total hours played year-to-date (YTD) using the calendar.
+			CALCULATE(
+			    [Total Horas Num],
+			    DATESYTD(Calendario[Date], "31/12")
+			)
+		lineageTag: 3e45776d-9ae6-429e-8012-1122dcabf572
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Sesions =
+			// Counts the number of rows in the Games table, i.e., the number of sessions.
+			COUNTROWS(Games)
+		formatString: 0
+		lineageTag: ea0e2e69-92e3-49b2-92bd-8a8e69745308
+
+	measure 'Hour AV' = ```
+			// Calculates the average session duration in hours and minutes.
+			VAR _Duration =
+				AVERAGEX(
+					Games,
+					// Gets the start and finish hour for each game
+					VAR _Start = Games[Start Hour]
+					VAR _Finish = Games[Finish Hour]
+					// If the finish hour is less than the start hour, adds 1 (crosses midnight)
+					RETURN 
+						IF(_Finish < _Start, _Finish + 1 - _Start, _Finish - _Start)
+				)
+			// Converts the average duration (in days) to hours and minutes
+			VAR TotalHours = INT(_Duration * 24)
+			VAR TotalMinutes = INT((_Duration * 24 - TotalHours) * 60)
+			RETURN
+			TotalHours & "h " & FORMAT(TotalMinutes, "00") & "m"
+			```
+		lineageTag: 1b41fc45-ab25-48af-b339-8472b15fe64b
+
+	column Column
+		formatString: 0
+		lineageTag: 29ea13db-851a-4325-a6b3-e534d1dd26c7
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition @Measures = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 2e9c2812edef4d1789fdf18365fabea2
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+
